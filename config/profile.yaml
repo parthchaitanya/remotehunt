@@ -1,0 +1,50 @@
+# Your job-search preferences. Edit freely; the backend re-reads this file on every run.
+candidate:
+  target_roles:
+    - Python Developer
+    - Data Analyst
+    - AI Engineer
+  experience_level: entry          # student / intern / entry
+  max_years_required: 2            # jobs asking for more get a match penalty
+  timezone: Asia/Kolkata
+  utc_offset: 5.5
+  country: India
+  # Only paid roles are kept; unpaid / volunteer / equity-only postings are filtered out.
+  compensation: paid
+  # Remote is preferred. Non-remote jobs are kept only if located in one of these places.
+  onsite_ok_locations:
+    - Noida
+    - Delhi
+    - New Delhi
+    - Gurugram
+    - Gurgaon
+    - Ghaziabad
+    - Greater Noida
+    - Delhi NCR
+  # How many hours of time-zone distance from IST you can work with.
+  timezone_tolerance_hours: 3.5
+
+search:
+  # Keywords sent to sources that accept a query (each query costs one API call on budgeted sources).
+  queries:
+    - python developer
+    - data analyst
+    - ai engineer
+  # Extra words used for local filtering / title matching.
+  role_keywords:
+    Python Developer: [python, backend, django, flask, fastapi, software engineer, developer]
+    Data Analyst: [data analyst, analytics, business analyst, bi analyst, reporting analyst, data]
+    AI Engineer: [ai engineer, machine learning, ml engineer, llm, genai, nlp, data scientist, ai]
+  keep_min_score: 25               # jobs below this match score are stored but hidden from the default list
+
+matching:
+  tailor_min_score: 70             # "high match" threshold for tailored resume / cover letter
+  digest_min_score: 45
+  digest_max_jobs: 15
+
+gmail:
+  # The only address the app will ever send mail to (your daily digest). Must match the connected account.
+  # Set GMAIL_ADDRESS in .env (kept out of git); a value here is used only if that is empty.
+  address: ""
+  auto_create_reply_drafts: false  # drafts are always created on request from the UI; never sent
+  follow_up_days: 7

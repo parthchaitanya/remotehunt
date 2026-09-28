@@ -1,0 +1,13 @@
+# Render Blueprint: New + -> Blueprint -> pick this repo. Deploys the public demo on the free plan.
+services:
+  - type: web
+    name: remotehunt-demo
+    runtime: docker
+    plan: free
+    dockerfilePath: ./Dockerfile.demo
+    dockerContext: .
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: DEMO_MODE
+        value: "true"

@@ -1,0 +1,48 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DATA_DIR: /app/data
+      CONFIG_DIR: /app/config
+      FRONTEND_URL: http://localhost:8080
+      CORS_ORIGINS: http://localhost:8080
+      # The same redirect URI works for local dev and Docker (register it once in Google Cloud).
+      OAUTH_REDIRECT_URI: http://localhost:8765/api/gmail/auth/callback
+      TZ: Asia/Kolkata
+    volumes:
+      - ./data:/app/data            # SQLite DB, uploaded resumes, local Fernet key
+      - ./config:/app/config:ro     # sources.yaml, target_companies.yaml, profile.yaml
+      - hf-cache:/app/.hf-cache     # all-MiniLM-L6-v2 model cache
+    ports:
+      - "8765:8765"
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+  # Optional: `docker compose --profile postgres up -d` and set
+  # DATABASE_URL=postgresql+psycopg://remotehunt:remotehunt@postgres:5432/remotehunt in .env
+  postgres:
+    image: postgres:16-alpine
+    profiles: ["postgres"]
+    environment:
+      POSTGRES_USER: remotehunt
+      POSTGRES_PASSWORD: remotehunt
+      POSTGRES_DB: remotehunt
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  hf-cache:
+  pgdata:

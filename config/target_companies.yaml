@@ -1,0 +1,56 @@
+# Companies whose public ATS job boards are polled directly (official public job-board APIs).
+# Find a board token from the company's careers URL:
+#   greenhouse       -> boards.greenhouse.io/<token>  or  job-boards.greenhouse.io/<token>
+#   lever            -> jobs.lever.co/<token>
+#   ashby            -> jobs.ashbyhq.com/<token>
+#   workable         -> apply.workable.com/<token>
+#   smartrecruiters  -> jobs.smartrecruiters.com/<CompanyIdentifier>
+# A wrong token is logged as a health failure for that company and skipped - it never crashes a run.
+# All tokens below were verified to resolve on 2026-09-28.
+
+greenhouse:
+  - {name: GitLab, token: gitlab}
+  - {name: Canonical, token: canonical}
+  - {name: Elastic, token: elastic}
+  - {name: Grafana Labs, token: grafanalabs}
+  - {name: MongoDB, token: mongodb}
+  - {name: Remote, token: remotecom}
+  - {name: HackerRank, token: hackerrank}
+  - {name: Groww, token: groww}
+  - {name: Druva, token: druva}
+  - {name: Rubrik, token: rubrik}
+  - {name: Zscaler, token: zscaler}
+  - {name: Databricks, token: databricks}
+  - {name: Okta, token: okta}
+  - {name: Cloudflare, token: cloudflare}
+  - {name: Observe.AI, token: observeai}
+
+lever:
+  - {name: CRED, token: cred}
+  - {name: Meesho, token: meesho}
+  - {name: Spotify, token: spotify}
+  - {name: Paytm, token: paytm}
+  - {name: Mindtickle, token: mindtickle}
+  - {name: Zeta, token: zeta}
+
+ashby:
+  - {name: PostHog, token: posthog}
+  - {name: Supabase, token: supabase}
+  - {name: n8n, token: n8n}
+  - {name: OpenAI, token: openai}
+  - {name: Linear, token: linear}
+  - {name: Ramp, token: ramp}
+  - {name: Sarvam AI, token: sarvam}
+  - {name: Atlan, token: atlan}
+  - {name: Composio, token: composio}
+  - {name: Lovable, token: lovable}
+  - {name: Cursor, token: cursor}
+  - {name: Perplexity, token: perplexity}
+
+workable:
+  - {name: Blueground, token: blueground}
+
+smartrecruiters:
+  - {name: Freshworks, token: Freshworks}
+  - {name: ServiceNow, token: ServiceNow}
+  - {name: Canva, token: Canva}

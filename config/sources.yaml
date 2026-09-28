@@ -1,0 +1,184 @@
+# Job source plugins. Every source uses an official API, RSS feed, or your own Gmail - no scraping.
+#
+# limits (all optional):
+#   max_calls_per_day      rolling 24h cap on HTTP calls
+#   max_calls_per_week     rolling 7-day cap
+#   lifetime_budget        total calls ever allowed (persisted in the DB)
+#   min_seconds_between_calls   spacing between consecutive calls
+#   min_hours_between_runs      skip a scheduled run if the last one was more recent
+# active_health: true -> health check makes one cheap request; false -> health is derived from
+#   the last run so that tightly-budgeted APIs are never spent on health checks.
+
+defaults:
+  timeout_seconds: 25
+  user_agent: "RemoteHunt/1.0 (personal job-search assistant; low volume)"
+  max_jobs_per_run: 5000   # safety cap on jobs processed per source per run
+
+sources:
+  remotive:
+    type: remotive
+    enabled: true
+    active_health: false
+    # Remotive asks clients not to call the API more than 4 times a day.
+    limits: {max_calls_per_day: 4, min_hours_between_runs: 5.5}
+    params: {limit: 300}
+
+  remoteok:
+    type: remoteok
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 4, min_hours_between_runs: 5.5}
+
+  weworkremotely:
+    type: wwr_rss
+    enabled: true
+    active_health: true
+    limits: {max_calls_per_day: 16, min_seconds_between_calls: 3, min_hours_between_runs: 5.5}
+    params:
+      feeds:
+        - https://weworkremotely.com/categories/remote-back-end-programming-jobs.rss
+        - https://weworkremotely.com/categories/remote-full-stack-programming-jobs.rss
+        - https://weworkremotely.com/categories/all-other-remote-jobs.rss
+
+  himalayas:
+    type: himalayas
+    enabled: true
+    active_health: true
+    limits: {max_calls_per_day: 24, min_seconds_between_calls: 3, min_hours_between_runs: 5.5}
+    params: {per_query_limit: 20, feed_pages: 5}
+
+  jobicy:
+    type: jobicy
+    enabled: true
+    active_health: false
+    # Jobicy asks for no more than one poll per hour.
+    limits: {max_calls_per_day: 12, min_seconds_between_calls: 5, min_hours_between_runs: 5.5}
+    params:
+      count: 50
+      tags: [python, data-analyst, machine-learning]
+
+  arbeitnow:
+    type: arbeitnow
+    enabled: true
+    active_health: true
+    limits: {max_calls_per_day: 16, min_seconds_between_calls: 3, min_hours_between_runs: 5.5}
+    params: {pages: 2}
+
+  workingnomads:
+    type: workingnomads
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 4, min_hours_between_runs: 5.5}
+
+  hn_whos_hiring:
+    type: hn_algolia
+    enabled: true
+    active_health: true
+    limits: {max_calls_per_day: 10, min_seconds_between_calls: 2, min_hours_between_runs: 23}
+    params: {max_comments: 1000, remote_only: true}
+
+  greenhouse:
+    type: greenhouse
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 120, min_seconds_between_calls: 1.5, min_hours_between_runs: 23}
+
+  themuse:
+    type: themuse
+    enabled: true
+    active_health: true
+    # Public API allows ~500 requests/hour unauthenticated; we use ~4 per run.
+    limits: {max_calls_per_day: 40, min_seconds_between_calls: 2, min_hours_between_runs: 5.5}
+    params:
+      pages: 2
+      categories: [Software Engineering, Data and Analytics, Data Science]
+      levels: [Entry Level, Internship, Mid Level]
+      location_groups:
+        - ["Flexible / Remote"]
+        - ["New Delhi, India", "Gurgaon, India", "Noida, India", "Bangalore, India", "Hyderabad, India",
+           "Pune, India", "Mumbai, India"]
+
+  hasjob:
+    type: hasjob
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 4, min_hours_between_runs: 5.5}
+
+  fourdayweek:
+    type: fourdayweek
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 12, min_seconds_between_calls: 3, min_hours_between_runs: 5.5}
+    params: {pages: 3}
+
+  remote_rss:
+    type: rss_feeds
+    enabled: true
+    active_health: true
+    limits: {max_calls_per_day: 12, min_seconds_between_calls: 3, min_hours_between_runs: 5.5}
+    params:
+      feeds:
+        - {url: "https://www.realworkfromanywhere.com/rss.xml", worldwide: true}
+        - {url: "https://jobspresso.co/feed/?post_type=job_listing", worldwide: false}
+
+  hn_jobs:
+    type: hn_jobs
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 4, min_hours_between_runs: 11}
+    params: {limit: 200}
+
+  lever:
+    type: lever
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 120, min_seconds_between_calls: 1.5, min_hours_between_runs: 23}
+
+  ashby:
+    type: ashby
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 120, min_seconds_between_calls: 1.5, min_hours_between_runs: 23}
+
+  workable:
+    type: workable
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 120, min_seconds_between_calls: 2, min_hours_between_runs: 23}
+
+  smartrecruiters:
+    type: smartrecruiters
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 200, min_seconds_between_calls: 1.5, min_hours_between_runs: 23}
+    params: {max_detail_calls_per_company: 15}
+
+  adzuna:
+    type: adzuna
+    enabled: true
+    active_health: false
+    # Free tier allows far more; we stay well under it.
+    limits: {max_calls_per_day: 24, min_seconds_between_calls: 3, min_hours_between_runs: 5.5}
+    params: {country: in, results_per_page: 50, max_days_old: 7}
+
+  jooble:
+    type: jooble
+    enabled: true
+    active_health: false
+    # 500 requests for the lifetime of the key -> run weekly, 3 queries per run (~3 years of budget).
+    limits: {lifetime_budget: 500, max_calls_per_week: 3, min_seconds_between_calls: 3, min_hours_between_runs: 167}
+    params: {location: "India"}
+
+  careerjet:
+    type: careerjet
+    enabled: false
+    active_health: false
+    limits: {max_calls_per_day: 6, min_seconds_between_calls: 3, min_hours_between_runs: 23}
+    params: {locale_code: en_IN, location: India}
+
+  gmail_alerts:
+    type: gmail_alerts
+    enabled: true
+    active_health: false
+    limits: {max_calls_per_day: 400, min_hours_between_runs: 5.5}
+    params: {newer_than_days: 3, max_messages: 60}
